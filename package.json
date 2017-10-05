@@ -1,0 +1,15 @@
+{
+  "name": "ogs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Adam Ransom",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "1.7.8",
+    "electron-reload": "^1.2.2"
+  }
+}
