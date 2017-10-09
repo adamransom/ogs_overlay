@@ -3,8 +3,39 @@
   <head>
     <meta charset="UTF-8">
     <title>OGS</title>
+    <link href="style/app.css" media="all" rel="stylesheet">
   </head>
   <body>
+    <div>
+      <form id="game_id_form">
+        <input id="game_id" value="10230806"></input>
+        <input type="submit" value="Load Game"></input>
+      </form>
+    </div>
+    <div class="PlayerBlock">
+      <div class="PlayerBlock__left">
+        <div class="Stone Stone--black" id="black_caps">0</div>
+      </div>
+      <div class="PlayerBlock__right">
+        <div class="PlayerBlock__stats">
+          <span class="PlayerBlock__name" id="black_name">Black</span> <span class="PlayerBlock__rank" id="black_rank"></span>
+        </div>
+        <div class="PlayerBlock__clock" id="black_time"></div>
+      </div>
+    </div>
+    <div class="PlayerBlock">
+      <div class="PlayerBlock__left">
+        <div class="Stone Stone--white" id="white_caps">0</div>
+      </div>
+      <div class="PlayerBlock__right">
+        <div class="PlayerBlock__stats">
+          <span class="PlayerBlock__name" id="white_name">White</span> <span class="PlayerBlock__rank" id="white_rank"></span>
+        </div>
+        <div class="PlayerBlock__clock" id="white_time"></div>
+      </div>
+    </div>
+    <div id="move_name">
+    </div>
     <script type="text/javascript" src="js/app.js"></script>
   </body>
 </html>
