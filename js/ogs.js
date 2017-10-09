@@ -3,7 +3,11 @@ const { setOGSClock } = require('./clock');
 
 let ws = null;
 
-module.exports = function(gameId) {
+module.exports = function(gameId, fresh = false) {
+  if (fresh) {
+    reset();
+  }
+
   if (ws) {
     ws.close();
     ws = null;
@@ -46,6 +50,16 @@ let board;
 let cur_player = 0;
 let phase;
 let time_control;
+
+function reset() {
+  document.getElementById('black_caps').innerHTML = 0;
+  document.getElementById('white_caps').innerHTML = 0;
+  document.getElementById('black_name').innerHTML = 'Black';
+  document.getElementById('white_name').innerHTML = 'White';
+  document.getElementById('black_rank').innerHTML = '';
+  document.getElementById('white_rank').innerHTML = '';
+  document.getElementById('move_name').innerHTML = '';
+}
 
 function handleEvent(event, data, gameId) {
   console.debug("Event: ", event);
@@ -108,7 +122,6 @@ function setPlayer(player, players) {
   const playerName = playerData.username;
 
   document.getElementById(player + '_name').innerHTML = playerName;
-  document.getElementById(player + '_rank').innerHTML = '';
 
   fetch('https://online-go.com/api/v1/players/' + playerData.id).then(function(response) {
     return response.json();
