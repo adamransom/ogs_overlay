@@ -24,11 +24,26 @@ body {
   align-items: center;
 }
 
+.PlayerBlock.is-playing
+.PlayerBlock__turn-indicator {
+  opacity: 1;
+}
+
 .PlayerBlock__name {
   -webkit-text-stroke-color: #444;
   -webkit-text-stroke-width: 0.2px;
   font-size: 20px;
   line-height: 1;
+}
+
+.PlayerBlock__turn-indicator {
+  background-color: #ff0000;
+  border-radius: 999px;
+  height: 8px;
+  margin-left: 10px;
+  opacity: 0;
+  transition: opacity 0.4s;
+  width: 8px;
 }
 
 .PlayerBlock__rank {

@@ -12,24 +12,28 @@
         <input type="submit" value="Load Game"></input>
       </form>
     </div>
-    <div class="PlayerBlock">
+    <div id="black" class="PlayerBlock">
       <div class="PlayerBlock__left">
         <div class="Stone Stone--black" id="black_caps">0</div>
       </div>
       <div class="PlayerBlock__right">
         <div class="PlayerBlock__stats">
-          <span class="PlayerBlock__name" id="black_name">Black</span> <span class="PlayerBlock__rank" id="black_rank"></span>
+          <span class="PlayerBlock__name" id="black_name">Black</span>
+          <span class="PlayerBlock__rank" id="black_rank"></span>
+          <div class="PlayerBlock__turn-indicator"></div>
         </div>
         <div class="PlayerBlock__clock" id="black_time"></div>
       </div>
     </div>
-    <div class="PlayerBlock">
+    <div id="white" class="PlayerBlock">
       <div class="PlayerBlock__left">
         <div class="Stone Stone--white" id="white_caps">0</div>
       </div>
       <div class="PlayerBlock__right">
         <div class="PlayerBlock__stats">
-          <span class="PlayerBlock__name" id="white_name">White</span> <span class="PlayerBlock__rank" id="white_rank"></span>
+          <span class="PlayerBlock__name" id="white_name">White</span>
+          <span class="PlayerBlock__rank" id="white_rank"></span>
+          <div class="PlayerBlock__turn-indicator"></div>
         </div>
         <div class="PlayerBlock__clock" id="white_time"></div>
       </div>

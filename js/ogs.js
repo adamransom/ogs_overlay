@@ -48,10 +48,13 @@ module.exports = function(gameId, fresh = false) {
 
 let board;
 let cur_player = 0;
+let pause_control;
 let phase;
 let time_control;
 
 function reset() {
+  document.getElementById("black").classList.remove('is-playing');
+  document.getElementById("white").classList.remove('is-playing');
   document.getElementById('black_caps').innerHTML = 0;
   document.getElementById('white_caps').innerHTML = 0;
   document.getElementById('black_name').innerHTML = 'Black';
@@ -134,6 +137,15 @@ function setPlayer(player, players) {
 }
 
 function setClock(clock) {
-  cur_player = clock.current_player == clock.black_player_id ? 1 : -1;
+  if (clock.current_player == clock.black_player_id) {
+    cur_player == 1;
+    document.getElementById("black").classList.add('is-playing');
+    document.getElementById("white").classList.remove('is-playing');
+  } else {
+    cur_player = -1;
+    document.getElementById("black").classList.remove('is-playing');
+    document.getElementById("white").classList.add('is-playing');
+  }
+
   setOGSClock(clock, phase, time_control);
 }
