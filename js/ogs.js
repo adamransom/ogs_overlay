@@ -62,6 +62,8 @@ function reset() {
   document.getElementById('black_rank').innerHTML = '';
   document.getElementById('white_rank').innerHTML = '';
   document.getElementById('move_name').innerHTML = '';
+  document.getElementById("game").className = '';
+  document.getElementById("outcome").innerHTML = '';
 }
 
 function handleEvent(event, data, gameId) {
@@ -85,13 +87,21 @@ function handleGameData(data) {
   board = new Board();
 
   time_control = data.time_control;
+  pause_control = data.pause_control;
   phase = data.phase;
-  setClock(data.clock);
-  setPlayers(data.players);
 
+  document.getElementById('game').className = phase;
+
+  if ('outcome' in data) {
+    setOutcome(data);
+  } else {
+    setClock(data.clock);
+  }
+  setPlayers(data.players);
 
   let local_player = 1;
   let vertex;
+
   data.moves.forEach(function(move) {
     if (move[0] >= 0 && move[1] >= 0) {
       vertex = [move[0], move[1]];
@@ -136,6 +146,26 @@ function setPlayer(player, players) {
   });
 }
 
+function setOutcome(data) {
+  let winner = 'Black';
+  let other = 'white';
+
+  if (data.winner != data.black_player_id) {
+    winner = 'White';
+    other = 'black';
+  }
+
+  if ('score' in data) {
+    document.getElementById('black_score').innerHTML = data.score.black.total + ' points';
+    document.getElementById('white_score').innerHTML = data.score.white.total + ' points';
+
+    let diff = data.score[winner.toLowerCase()].total - data.score[other].total;
+    document.getElementById('outcome').innerHTML = winner + ' wins by ' + diff + ' points';
+  } else {
+    document.getElementById('outcome').innerHTML = winner + ' wins by ' + data.outcome;
+  }
+}
+
 function setClock(clock) {
   if (clock.current_player == clock.black_player_id) {
     cur_player == 1;
@@ -147,5 +177,5 @@ function setClock(clock) {
     document.getElementById("white").classList.add('is-playing');
   }
 
-  setOGSClock(clock, phase, time_control);
+  setOGSClock(clock, phase, time_control, pause_control);
 }

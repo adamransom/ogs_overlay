@@ -24,6 +24,7 @@ body {
   align-items: center;
 }
 
+.play
 .PlayerBlock.is-playing
 .PlayerBlock__turn-indicator {
   opacity: 1;
@@ -58,7 +59,12 @@ body {
   line-height: 1;
 }
 
-.time_suffix {
+#game:not(.play) .PlayerBlock__clock {
+  display: none;
+}
+
+.time_suffix,
+.PlayerBlock__score {
   color: #95989a;
   font-size: 24px;
 }

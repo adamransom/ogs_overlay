@@ -3,13 +3,12 @@
 // --------------------------
 let clock_timer = null;
 let now;
-let pause_control = null;
 let paused_since = null;
 
 let black_pause_text = null;
 let white_pause_text = null;
 
-exports.setOGSClock = function(clock, phase, time_control) {
+exports.setOGSClock = function(clock, phase, time_control, pause_control) {
   if ("pause" in clock) {
     if (clock.pause.paused) {
       paused_since = clock.pause.paused_since;
@@ -197,7 +196,6 @@ exports.setOGSClock = function(clock, phase, time_control) {
         black_pause_text = ("Paused");
         white_pause_text = ("Paused");
         if (pause_control) {
-          let pause_control = pause_control;
           if ("weekend" in pause_control) {
             black_pause_text = ("Weekend");
             white_pause_text = ("Weekend");
