@@ -24,6 +24,10 @@ body {
   align-items: center;
 }
 
+.PlayerBlock.has-lost {
+  opacity: 0.15;
+}
+
 .play
 .PlayerBlock.is-playing
 .PlayerBlock__turn-indicator {
@@ -64,8 +68,12 @@ body {
   display: none;
 }
 
-.time_suffix,
-.PlayerBlock__score {
+.PlayerBlock__outcome {
+  color: #95989a;
+  font-size: 30px;
+}
+
+.time_suffix {
   color: #95989a;
   font-size: 24px;
 }

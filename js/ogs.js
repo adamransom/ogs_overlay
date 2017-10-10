@@ -55,17 +55,18 @@ let phase;
 let time_control;
 
 function reset() {
-  document.getElementById("black").classList.remove('is-playing');
-  document.getElementById("white").classList.remove('is-playing');
+  document.getElementById("black").className = 'PlayerBlock';
+  document.getElementById("white").className = 'PlayerBlock';
   document.getElementById('black_caps').innerHTML = 0;
   document.getElementById('white_caps').innerHTML = 0;
   document.getElementById('black_name').innerHTML = 'Black';
   document.getElementById('white_name').innerHTML = 'White';
   document.getElementById('black_rank').innerHTML = '';
   document.getElementById('white_rank').innerHTML = '';
+  document.getElementById("black_outcome").innerHTML = '';
+  document.getElementById("white_outcome").innerHTML = '';
   document.getElementById('move_name').innerHTML = '';
   document.getElementById("game").className = '';
-  document.getElementById("outcome").innerHTML = '';
 }
 
 function handleEvent(event, data, gameId) {
@@ -152,22 +153,31 @@ function setPlayer(player, players) {
 }
 
 function setOutcome(data) {
-  let winner = 'Black';
+  let winner = 'black';
   let other = 'white';
 
   if (data.winner != data.black_player_id) {
-    winner = 'White';
+    winner = 'white';
     other = 'black';
   }
 
-  if ('score' in data) {
-    document.getElementById('black_score').innerHTML = data.score.black.total + ' points';
-    document.getElementById('white_score').innerHTML = data.score.white.total + ' points';
+  document.getElementById(other).classList.add('has-lost');
 
-    let diff = data.score[winner.toLowerCase()].total - data.score[other].total;
-    document.getElementById('outcome').innerHTML = winner + ' wins by ' + diff + ' points';
+  if ('score' in data) {
+    let diff = data.score[winner].total - data.score[other].total;
+    document.getElementById(winner + '_outcome').innerHTML = 'Wins by ' + diff + ' points';
+    document.getElementById(other + '_outcome').innerHTML = data.score[other].total + ' points';
   } else {
-    document.getElementById('outcome').innerHTML = winner + ' wins by ' + data.outcome;
+    if (data.outcome == 'Resignation') {
+      document.getElementById(winner + '_outcome').innerHTML = 'Wins by resignation';
+      document.getElementById(other + '_outcome').innerHTML = 'Resigned';
+    } else if (data.outcome == 'Timeout') {
+      document.getElementById(winner + '_outcome').innerHTML = 'Wins by timeout';
+      document.getElementById(other + '_outcome').innerHTML = 'Timed Out';
+    } else {
+      document.getElementById(winner + '_outcome').innerHTML = 'Wins';
+      document.getElementById(other + '_outcome').innerHTML = 'Loses';
+    }
   }
 }
 
