@@ -1,5 +1,6 @@
 const { getUserRating } = require('./rank_utils');
 const { setOGSClock } = require('./clock');
+const sockets = require('./sockets');
 
 let ws = null;
 
@@ -19,6 +20,7 @@ module.exports = function(gameId, fresh = false) {
     console.info('WebSocket opened');
     // Connect to the game when the connection has been opened
     ws.send(`42["game/connect", { "game_id": ${gameId}, "chat": false }]`);
+    sockets.ping(ws);
   }
 
   ws.onclose = function(event) {
@@ -79,6 +81,9 @@ function handleEvent(event, data, gameId) {
       break;
     case `game/${gameId}/move`:
       handleMove(data);
+      break;
+    case 'net/pong':
+      sockets.handlePong(data);
       break;
   }
 }
@@ -177,5 +182,5 @@ function setClock(clock) {
     document.getElementById("white").classList.add('is-playing');
   }
 
-  setOGSClock(clock, phase, time_control, pause_control);
+  setOGSClock(clock, phase, time_control, pause_control, sockets);
 }

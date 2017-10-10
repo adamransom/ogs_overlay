@@ -8,7 +8,7 @@ let paused_since = null;
 let black_pause_text = null;
 let white_pause_text = null;
 
-exports.setOGSClock = function(clock, phase, time_control, pause_control) {
+exports.setOGSClock = function(clock, phase, time_control, pause_control, sockets) {
   if ("pause" in clock) {
     if (clock.pause.paused) {
       paused_since = clock.pause.paused_since;
@@ -177,8 +177,8 @@ exports.setOGSClock = function(clock, phase, time_control, pause_control) {
       paused_since *= 1000;
     }
 
-    let now_delta = 0;
-    let lag = 0;
+    let now_delta = sockets.getClockDrift();
+    let lag = sockets.getNetworkLatency();
 
     if (phase !== "play" && phase !== "stone removal") {
       return;
