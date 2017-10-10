@@ -42,6 +42,7 @@ body {
   border-radius: 999px;
   height: 8px;
   margin-left: 10px;
+  margin-top: 2px;
   opacity: 0;
   transition: opacity 0.4s;
   width: 8px;
