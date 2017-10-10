@@ -168,7 +168,7 @@ function setOutcome(data) {
 
 function setClock(clock) {
   if (clock.current_player == clock.black_player_id) {
-    cur_player == 1;
+    cur_player = 1;
     document.getElementById("black").classList.add('is-playing');
     document.getElementById("white").classList.remove('is-playing');
   } else {
