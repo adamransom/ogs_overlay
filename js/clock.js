@@ -31,11 +31,17 @@ exports.setOGSClock = function(clock, phase, time_control) {
   let now;
   let use_short_format = false;
 
-  let formatTime = function(clock_div, time, base_time, player_id) {
+  let formatTime = function(player, time, base_time, player_id) {
     let next_clock_update = 60000;
     let ms;
     let time_suffix = "";
     let periods_left = 0;
+    let main_time_div = document.getElementById(player + "_main_time");
+    let periods_div = document.getElementById(player + "_periods");
+    let period_time_div = document.getElementById(player + "_period_time");
+    let overtime_div = null;
+    let overtime_parent_div = null;
+
 
     if (typeof(time) === "object") {
       ms = (base_time + (time.thinking_time) * 1000) - now;
@@ -49,6 +55,9 @@ exports.setOGSClock = function(clock, phase, time_control) {
           periods_left = 1;
         }
         if (ms < 0 || (time.thinking_time === 0 && "block_time" in time)) {
+          if (overtime_parent_div) {
+            overtime_parent_div.classList.add("in-overtime");
+          }
           ms = (base_time + (time.thinking_time + time.block_time) * 1000) - now;
           if (time.moves_left) {
             time_suffix = "<span class='time_suffix'>/ " + time.moves_left + "</span>";
@@ -56,15 +65,21 @@ exports.setOGSClock = function(clock, phase, time_control) {
         }
 
         let moves_done = time_control.stones_per_period - time.moves_left;
+
         if (periods_div) {
-          periods_div.text(moves_done + " / " + time_control.stones_per_period);
+          periods_div.innerHTML = moves_done + " / " + time_control.stones_per_period;
         }
 
-        //console.log(shortDurationString(time_control.period_time));
+        if (period_time_div) {
+          period_time_div.innerHTML = shortDurationString(time_control.period_time);
+        }
       }
       if ("periods" in time) { /* byo yomi */
         let period_offset = 0;
         if (ms < 0 || time.thinking_time === 0) {
+          if (overtime_parent_div) {
+            overtime_parent_div.classList.add("in-overtime");
+          }
 
           period_offset = Math.floor((-ms / 1000) / time.period_time);
           if (period_offset < 0) {
@@ -80,6 +95,9 @@ exports.setOGSClock = function(clock, phase, time_control) {
           }
           periods_left = ((time.periods - period_offset));
           if (((time.periods - period_offset) - 1) > 0) {
+            if (period_time_div) {
+              period_time_div.innerHTML = "× " + shortDurationString(time.period_time);
+            }
             time_suffix = "<span class='time_suffix'> + " + periods_left + " × " + (shortDurationString(time.period_time)).trim() + "</span>";
           }
           if (((time.periods - period_offset) - 1) < 0) {
@@ -88,9 +106,14 @@ exports.setOGSClock = function(clock, phase, time_control) {
         } else {
           periods_left = time.periods;
           time_suffix = "<span class='time_suffix'> + " + (time.periods) + " × " + (shortDurationString(time.period_time)).trim() + "</span>";
+          if (period_time_div) {
+            period_time_div.innerHTML = "× " + shortDurationString(time.period_time);
+          }
         }
 
-        //console.log('periods', shortDurationString(periods_left));
+        if (periods_div) {
+          periods_div.innerHTML = "+ " + periods_left;
+        }
       }
     } else {
       /* time is just a raw number */
@@ -122,9 +145,9 @@ exports.setOGSClock = function(clock, phase, time_control) {
       if (next_clock_update === 0) {
         next_clock_update = 1000;
       }
-      //if (this.engine.paused_since) {
-      //  next_clock_update = 60000;
-      //}
+      if (paused_since) {
+        next_clock_update = 60000;
+      }
       html = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
       if (minutes === 0 && seconds <= 10) {
         if (seconds % 2 === 0) {
@@ -140,11 +163,10 @@ exports.setOGSClock = function(clock, phase, time_control) {
       cls += " paused";
     }
 
-    //if (main_time_div) {
-    //main_time_div.html(html);
-    //console.log(html);
-    //}
-    clock_div.innerHTML = `<span class='clock ${cls}'>${html}<span>${(use_short_format ? "" : time_suffix)}`;
+    if (main_time_div) {
+      main_time_div.innerHTML = html;
+    }
+
     return next_clock_update;
   };
 
@@ -159,9 +181,6 @@ exports.setOGSClock = function(clock, phase, time_control) {
     let now_delta = 0;
     let lag = 0;
 
-    black_clock_el.innerHTML = '';
-    white_clock_el.innerHTML = '';
-
     if (phase !== "play" && phase !== "stone removal") {
       return;
     }
@@ -169,7 +188,7 @@ exports.setOGSClock = function(clock, phase, time_control) {
     let next_clock_update = 1000;
 
     if (clock.start_mode) {
-      next_clock_update = formatTime(clock.black_player_id === clock.current_player ? black_clock_el : white_clock_el, clock.expiration + now_delta, clock.last_move);
+      next_clock_update = formatTime(clock.black_player_id === clock.current_player ? 'black' : 'white', clock.expiration + now_delta, clock.last_move);
     } else {
       black_pause_text = null;
       white_pause_text = null;
@@ -208,13 +227,13 @@ exports.setOGSClock = function(clock, phase, time_control) {
       }
 
       if (clock.black_time) {
-        let black_next_update = formatTime(black_clock_el, clock.black_time, black_base_time, clock.black_player_id);
+        let black_next_update = formatTime('black', clock.black_time, black_base_time, clock.black_player_id);
         if (clock.current_player === clock.black_player_id) {
           next_clock_update = black_next_update;
         }
       }
       if (clock.white_time) {
-        let white_next_update = formatTime(white_clock_el, clock.white_time, white_base_time, clock.white_player_id);
+        let white_next_update = formatTime('white', clock.white_time, white_base_time, clock.white_player_id);
         if (clock.current_player === clock.white_player_id) {
           next_clock_update = white_next_update;
         }
@@ -242,10 +261,10 @@ function shortDurationString(seconds) {
   let days = Math.floor(seconds / 86400); seconds -= days * 86400;
   let hours = Math.floor(seconds / 3600); seconds -= hours * 3600;
   let minutes = Math.floor(seconds / 60); seconds -= minutes * 60;
-
-  if (hours > 0) {
-    return `${hours}:${pad(minutes)}:${pad(seconds)}`;
-  } else {
-    return `${pad(minutes)}:${pad(seconds)}`;
-  }
+  return "" +
+    (weeks ? ` ${weeks}w` : "") +
+    (days ? ` ${days}d` : "") +
+    (hours ? ` ${hours}h` : "") +
+    (minutes ? ` ${minutes}m` : "") +
+    (seconds ? ` ${seconds}s` : "");
 }
