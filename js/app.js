@@ -1,5 +1,5 @@
 const { Board, getMoveInterpretation } = require('./js/sabaki');
-const connectToGame = require('./js/ogs');
+const { connectToGame, disconnect } = require('./js/ogs');
 
 document.getElementById('game_id_form').addEventListener('submit', function(e) {
   e.preventDefault();
@@ -8,3 +8,8 @@ document.getElementById('game_id_form').addEventListener('submit', function(e) {
   connectToGame(gameId, true);
 });
 
+document.getElementById('game_id_form').addEventListener('reset', function(e) {
+  e.preventDefault();
+
+  disconnect();
+});

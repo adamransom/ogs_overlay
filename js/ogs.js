@@ -4,7 +4,7 @@ const sockets = require('./sockets');
 
 let ws = null;
 
-module.exports = function(gameId, fresh = false) {
+exports.connectToGame = function(gameId, fresh = false) {
   if (fresh) {
     reset();
   }
@@ -46,6 +46,14 @@ module.exports = function(gameId, fresh = false) {
   }
 
   ws.onerror = console.error;
+}
+
+exports.disconnect = function() {
+  if (ws) {
+    reset();
+    ws.close();
+    ws = null;
+  }
 }
 
 let board;
