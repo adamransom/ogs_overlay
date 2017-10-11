@@ -91,6 +91,9 @@ function handleEvent(event, data, gameId) {
     case `game/${gameId}/move`:
       handleMove(data);
       break;
+    case `game/${gameId}/phase`:
+      handlePhase(data)
+      break;
     case 'net/pong':
       sockets.handlePong(data);
       break;
@@ -131,6 +134,18 @@ function handleMove(data) {
   const vertex = [data.move[0], data.move[1]];
   board = board.makeMove(cur_player * -1, vertex);
   setState(board, vertex);
+}
+
+function handlePhase(phase) {
+  document.getElementById('game').className = phase;
+
+  if (phase == 'stone removal') {
+    document.getElementById('black_outcome').innerHTML = 'Removing stones...';
+    document.getElementById('white_outcome').innerHTML = 'Removing stones...';
+  } else if (phase == 'play') {
+    document.getElementById('black_outcome').innerHTML = '';
+    document.getElementById('white_outcome').innerHTML = '';
+  }
 }
 
 function setState(board, vertex) {
