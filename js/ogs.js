@@ -73,6 +73,7 @@ function reset() {
   document.getElementById('white_rank').innerHTML = '';
   document.getElementById("black_outcome").innerHTML = '';
   document.getElementById("white_outcome").innerHTML = '';
+  document.getElementById('move_number').innerHTML = '';
   document.getElementById('move_name').innerHTML = '';
   document.getElementById("game").className = '';
 }
@@ -127,13 +128,13 @@ function handleGameData(data) {
     local_player *= -1;
   });
 
-  setState(board, vertex);
+  setState(board, vertex, data.moves.length);
 }
 
 function handleMove(data) {
   const vertex = [data.move[0], data.move[1]];
   board = board.makeMove(cur_player * -1, vertex);
-  setState(board, vertex);
+  setState(board, vertex, data.move_number);
 }
 
 function handlePhase(phase) {
@@ -148,10 +149,13 @@ function handlePhase(phase) {
   }
 }
 
-function setState(board, vertex) {
+function setState(board, vertex, move_number) {
   document.getElementById('black_caps').innerHTML = board.captures[0];
   document.getElementById('white_caps').innerHTML = board.captures[1];
-  document.getElementById('move_name').innerHTML = getMoveInterpretation(board, vertex);
+  if (move_number > 0) {
+    document.getElementById('move_number').innerHTML = move_number;
+    document.getElementById('move_name').innerHTML = getMoveInterpretation(board, vertex);
+  }
 }
 
 function setPlayers(players) {
