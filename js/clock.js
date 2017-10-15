@@ -131,7 +131,7 @@ exports.setOGSClock = function(clock, phase, time_control, pause_control, socket
       cls = "out_of_time";
       html = "0.0";
     } else if (days > 1) {
-      html = plurality(days, _("Day"), _("Days")) + " " + (hours ? plurality(hours, _("Hour"), _("Hours")) : "");
+      html = plurality(days, "day", "days") + " " + (hours ? plurality(hours, "hour", "hours") : "");
       next_clock_update = 60000;
     } else if (hours || days === 1) {
       next_clock_update = 60000;
@@ -265,4 +265,8 @@ function shortDurationString(seconds) {
     (hours ? ` ${hours}h` : "") +
     (minutes ? ` ${minutes}m` : "") +
     (seconds ? ` ${seconds}s` : "");
+}
+
+function plurality(value, single, plural) {
+  return value + " " + (value > 1 ? plural : single);
 }
